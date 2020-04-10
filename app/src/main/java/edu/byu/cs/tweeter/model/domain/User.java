@@ -2,17 +2,19 @@ package edu.byu.cs.tweeter.model.domain;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Represents a user in the system.
  */
-public class User implements Comparable<User> {
+public class User implements Comparable<User>, Serializable {
 
     private final String firstName;
     private final String lastName;
     private final String alias;
     private final String imageUrl;
+    private byte [] imageBytes;
 
     public User(@NotNull String firstName, @NotNull String lastName, String imageURL) {
         this(firstName, lastName, String.format("@%s%s", firstName, lastName), imageURL);
@@ -43,6 +45,14 @@ public class User implements Comparable<User> {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public byte [] getImageBytes() {
+        return imageBytes;
+    }
+
+    public void setImageBytes(byte[] imageBytes) {
+        this.imageBytes = imageBytes;
     }
 
     @Override

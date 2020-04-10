@@ -9,6 +9,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import edu.byu.cs.tweeter.R;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.view.main.following.FollowingFragment;
 
 /**
@@ -22,16 +24,20 @@ class SectionsPagerAdapter extends FragmentPagerAdapter {
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.feedTabTitle, R.string.storyTabTitle, R.string.followingTabTitle, R.string.followersTabTitle};
     private final Context mContext;
+    private final User user;
+    private final AuthToken authToken;
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm) {
+    public SectionsPagerAdapter(Context context, FragmentManager fm, User user, AuthToken authToken) {
         super(fm);
         mContext = context;
+        this.user = user;
+        this.authToken = authToken;
     }
 
     @Override
     public Fragment getItem(int position) {
         if (position == FOLLOWING_FRAGMENT_POSITION) {
-            return new FollowingFragment();
+            return FollowingFragment.newInstance(user, authToken);
         } else {
             return PlaceholderFragment.newInstance(position + 1);
         }

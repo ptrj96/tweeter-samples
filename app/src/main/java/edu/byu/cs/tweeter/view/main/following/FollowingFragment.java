@@ -20,31 +20,59 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.byu.cs.tweeter.R;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.net.request.FollowingRequest;
 import edu.byu.cs.tweeter.net.response.FollowingResponse;
 import edu.byu.cs.tweeter.presenter.FollowingPresenter;
-import edu.byu.cs.tweeter.view.asyncTasks.GetFollowingTask;
-import edu.byu.cs.tweeter.view.cache.ImageCache;
+import edu.byu.cs.tweeter.view.util.ImageUtils;
 
 /**
  * The fragment that displays on the 'Following' tab.
  */
 public class FollowingFragment extends Fragment implements FollowingPresenter.View {
 
+    private static final String USER_KEY = "UserKey";
+    private static final String AUTH_TOKEN_KEY = "AuthTokenKey";
+
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
 
     private static final int PAGE_SIZE = 10;
 
+    private User user;
+    private AuthToken authToken;
     private FollowingPresenter presenter;
 
     private FollowingRecyclerViewAdapter followingRecyclerViewAdapter;
+
+    /**
+     * Creates an instance of the fragment and places the user and auth token in an arguments
+     * bundle assigned to the fragment.
+     *
+     * @param user the logged in user.
+     * @param authToken the auth token for this user's session.
+     * @return the fragment.
+     */
+    public static FollowingFragment newInstance(User user, AuthToken authToken) {
+        FollowingFragment fragment = new FollowingFragment();
+
+        Bundle args = new Bundle(2);
+        args.putSerializable(USER_KEY, user);
+        args.putSerializable(AUTH_TOKEN_KEY, authToken);
+
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_following, container, false);
+
+        //noinspection ConstantConditions
+        user = (User) getArguments().getSerializable(USER_KEY);
+        authToken = (AuthToken) getArguments().getSerializable(AUTH_TOKEN_KEY);
 
         presenter = new FollowingPresenter(this);
 
@@ -62,6 +90,16 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
     }
 
     /**
+     * A callback indicating more following data has been received.
+     *
+     * @param followingResponse the asynchronous response to the request to load more items.
+     */
+    @Override
+    public void followeesRetrieved(FollowingResponse followingResponse) {
+        followingRecyclerViewAdapter.followeesRetrieved(followingResponse);
+    }
+
+    /**
      * The ViewHolder for the RecyclerView that displays the Following data.
      */
     private class FollowingHolder extends RecyclerView.ViewHolder {
@@ -70,6 +108,11 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         private final TextView userAlias;
         private final TextView userName;
 
+        /**
+         * Creates an instance and sets an OnClickListener for the user's row.
+         *
+         * @param itemView the view on which the user will be displayed.
+         */
         FollowingHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -85,8 +128,13 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             });
         }
 
+        /**
+         * Binds the user's data to the view.
+         *
+         * @param user the user.
+         */
         void bindUser(User user) {
-            userImage.setImageDrawable(ImageCache.getInstance().getImageDrawable(user));
+            userImage.setImageDrawable(ImageUtils.drawableFromByteArray(user.getImageBytes()));
             userAlias.setText(user.getAlias());
             userName.setText(user.getName());
         }
@@ -95,7 +143,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
     /**
      * The adapter for the RecyclerView that displays the Following data.
      */
-    private class FollowingRecyclerViewAdapter extends RecyclerView.Adapter<FollowingHolder> implements GetFollowingTask.GetFolloweesObserver {
+    private class FollowingRecyclerViewAdapter extends RecyclerView.Adapter<FollowingHolder> {
 
         private final List<User> users = new ArrayList<>();
 
@@ -214,19 +262,16 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             isLoading = true;
             addLoadingFooter();
 
-            GetFollowingTask getFollowingTask = new GetFollowingTask(presenter, this);
-            FollowingRequest request = new FollowingRequest(presenter.getCurrentUser(), PAGE_SIZE, lastFollowee);
-            getFollowingTask.execute(request);
+            FollowingRequest request = new FollowingRequest(user, PAGE_SIZE, lastFollowee);
+            presenter.getFollowing(request);
         }
 
         /**
-         * A callback indicating more following data has been received. Loads the new followees
-         * and removes the loading footer.
+         * Loads the new followees and removes the loading footer.
          *
          * @param followingResponse the asynchronous response to the request to load more items.
          */
-        @Override
-        public void followeesRetrieved(FollowingResponse followingResponse) {
+        void followeesRetrieved(FollowingResponse followingResponse) {
             List<User> followees = followingResponse.getFollowees();
 
             lastFollowee = (followees.size() > 0) ? followees.get(followees.size() -1) : null;
