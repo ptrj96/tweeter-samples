@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.model.net.response;
+package edu.byu.cs.tweeter.model.service.response;
 
 /**
  * A response that can indicate whether there is more data available from the server.
@@ -24,7 +24,7 @@ public class PagedResponse extends Response {
      *
      * @return true if more data is available; otherwise, false.
      */
-    public boolean hasMorePages() {
+    public boolean getHasMorePages() {
         return hasMorePages;
     }
 }

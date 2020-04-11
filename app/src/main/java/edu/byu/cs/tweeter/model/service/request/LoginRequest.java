@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.model.net.request;
+package edu.byu.cs.tweeter.model.service.request;
 
 /**
  * Contains all the information needed to make a login request.
