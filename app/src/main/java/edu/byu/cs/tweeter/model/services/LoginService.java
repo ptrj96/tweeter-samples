@@ -1,56 +1,36 @@
 package edu.byu.cs.tweeter.model.services;
 
+import java.io.IOException;
+
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.net.ServerFacade;
+import edu.byu.cs.tweeter.net.request.LoginRequest;
+import edu.byu.cs.tweeter.net.response.LoginResponse;
+import edu.byu.cs.tweeter.util.ByteArrayUtils;
 
 /**
- * Contains the business logic for login and sign up.
+ * Contains the business logic to support the login operation.
  */
 public class LoginService {
 
-    /**
-     * The singleton instance.
-     */
-    private static LoginService instance;
+    public LoginResponse login(LoginRequest request) throws IOException {
+        ServerFacade serverFacade = new ServerFacade();
+        LoginResponse loginResponse = serverFacade.login(request);
 
-    /**
-     * The logged in user.
-     */
-    private User currentUser;
-
-    /**
-     * Return the singleton instance of this class.
-     *
-     * @return the instance.
-     */
-    public static LoginService getInstance() {
-        if(instance == null) {
-            instance = new LoginService();
+        if(loginResponse.isSuccess()) {
+            loadImage(loginResponse.getUser());
         }
 
-        return instance;
+        return loginResponse;
     }
 
     /**
-     * A private constructor created to ensure that this class is a singleton (i.e. that it
-     * cannot be instantiated by external classes).
-     */
-    private LoginService() {
-        // TODO: Remove when the actual login functionality exists.
-        currentUser = new User("Test", "User",
-                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
-        setCurrentUser(currentUser);
-    }
-
-    /**
-     * Returns the currently logged in user.
+     * Loads the profile image data for the user.
      *
-     * @return the user.
+     * @param user the user whose profile image data is to be loaded.
      */
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-    private void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
+    private void loadImage(User user) throws IOException {
+        byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
+        user.setImageBytes(bytes);
     }
 }

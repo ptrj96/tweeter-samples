@@ -1,6 +1,5 @@
 package edu.byu.cs.tweeter.view.main;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -15,28 +14,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import edu.byu.cs.tweeter.R;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.presenter.MainPresenter;
-import edu.byu.cs.tweeter.view.asyncTasks.LoadImageTask;
-import edu.byu.cs.tweeter.view.cache.ImageCache;
+import edu.byu.cs.tweeter.view.util.ImageUtils;
 
 /**
  * The main activity for the application. Contains tabs for feed, story, following, and followers.
  */
-public class MainActivity extends AppCompatActivity implements LoadImageTask.LoadImageObserver, MainPresenter.View {
+public class MainActivity extends AppCompatActivity {
 
-    private MainPresenter presenter;
-    private User user;
-    private ImageView userImageView;
+    public static final String CURRENT_USER_KEY = "CurrentUser";
+    public static final String AUTH_TOKEN_KEY = "AuthTokenKey";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        presenter = new MainPresenter(this);
+        User user = (User) getIntent().getSerializableExtra(CURRENT_USER_KEY);
+        AuthToken authToken = (AuthToken) getIntent().getSerializableExtra(AUTH_TOKEN_KEY);
 
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), user, authToken);
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
@@ -51,38 +49,13 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
             }
         });
 
-        userImageView = findViewById(R.id.userImage);
-
-        user = presenter.getCurrentUser();
-
-        // Asynchronously load the user's image
-        LoadImageTask loadImageTask = new LoadImageTask(this);
-        loadImageTask.execute(presenter.getCurrentUser().getImageUrl());
-
         TextView userName = findViewById(R.id.userName);
         userName.setText(user.getName());
 
         TextView userAlias = findViewById(R.id.userAlias);
         userAlias.setText(user.getAlias());
-    }
 
-    @Override
-    public void imageLoadProgressUpdated(Integer progress) {
-        // We're just loading one image. No need to indicate progress.
-    }
-
-    /**
-     * A callback that indicates that the image for the user being displayed on this activity has
-     * been loaded.
-     *
-     * @param drawables the drawables (there will only be one).
-     */
-    @Override
-    public void imagesLoaded(Drawable[] drawables) {
-        ImageCache.getInstance().cacheImage(user, drawables[0]);
-
-        if(drawables[0] != null) {
-            userImageView.setImageDrawable(drawables[0]);
-        }
+        ImageView userImageView = findViewById(R.id.userImage);
+        userImageView.setImageDrawable(ImageUtils.drawableFromByteArray(user.getImageBytes()));
     }
 }

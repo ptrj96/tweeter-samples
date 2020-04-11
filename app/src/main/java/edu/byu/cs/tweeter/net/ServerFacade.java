@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import edu.byu.cs.tweeter.BuildConfig;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.net.request.FollowingRequest;
+import edu.byu.cs.tweeter.net.request.LoginRequest;
 import edu.byu.cs.tweeter.net.response.FollowingResponse;
+import edu.byu.cs.tweeter.net.response.LoginResponse;
 
 /**
  * Acts as a Facade to the Tweeter server. All network requests to the server should go through
@@ -20,6 +23,20 @@ public class ServerFacade {
     private static Map<User, List<User>> followeesByFollower;
 
     /**
+     * Performs a login and if successful, returns the logged in user and an auth token. The current
+     * implementation is hard-coded to return a dummy user and doesn't actually make a network
+     * request.
+     *
+     * @param request contains all information needed to perform a login.
+     * @return the login response.
+     */
+    public LoginResponse login(LoginRequest request) {
+        User user = new User("Test", "User",
+                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+        return new LoginResponse(user, new AuthToken());
+    }
+
+    /**
      * Returns the users that the user specified in the request is following. Uses information in
      * the request object to limit the number of followees returned and to return the next set of
      * followees after any that were returned in a previous request. The current implementation
@@ -27,7 +44,7 @@ public class ServerFacade {
      *
      * @param request contains information about the user whose followees are to be returned and any
      *                other information required to satisfy the request.
-     * @return the followees.
+     * @return the following response.
      */
     public FollowingResponse getFollowees(FollowingRequest request) {
 

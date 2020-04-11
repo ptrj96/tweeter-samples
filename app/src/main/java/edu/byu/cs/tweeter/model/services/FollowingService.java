@@ -1,41 +1,17 @@
 package edu.byu.cs.tweeter.model.services;
 
+import java.io.IOException;
+
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.net.ServerFacade;
 import edu.byu.cs.tweeter.net.request.FollowingRequest;
 import edu.byu.cs.tweeter.net.response.FollowingResponse;
+import edu.byu.cs.tweeter.util.ByteArrayUtils;
 
 /**
  * Contains the business logic for getting the users a user is following.
  */
 public class FollowingService {
-
-    /**
-     * The singleton instance.
-     */
-    private static FollowingService instance;
-
-    private final ServerFacade serverFacade;
-
-    /**
-     * Return the singleton instance of this class.
-     *
-     * @return the instance.
-     */
-    public static FollowingService getInstance() {
-        if(instance == null) {
-            instance = new FollowingService();
-        }
-
-        return instance;
-    }
-
-    /**
-     * A private constructor created to ensure that this class is a singleton (i.e. that it
-     * cannot be instantiated by external classes).
-     */
-    private FollowingService() {
-        serverFacade = new ServerFacade();
-    }
 
     /**
      * Returns the users that the user specified in the request is following. Uses information in
@@ -46,7 +22,26 @@ public class FollowingService {
      * @param request contains the data required to fulfill the request.
      * @return the followees.
      */
-    public FollowingResponse getFollowees(FollowingRequest request) {
-        return serverFacade.getFollowees(request);
+    public FollowingResponse getFollowees(FollowingRequest request) throws IOException {
+        ServerFacade serverFacade = new ServerFacade();
+        FollowingResponse response = serverFacade.getFollowees(request);
+
+        if(response.isSuccess()) {
+            loadImages(response);
+        }
+
+        return response;
+    }
+
+    /**
+     * Loads the profile image data for each followee included in the response.
+     *
+     * @param response the response from the followee request.
+     */
+    private void loadImages(FollowingResponse response) throws IOException {
+        for(User user : response.getFollowees()) {
+            byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
+            user.setImageBytes(bytes);
+        }
     }
 }

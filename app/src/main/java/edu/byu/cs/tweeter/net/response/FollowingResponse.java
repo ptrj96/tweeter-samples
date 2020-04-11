@@ -25,7 +25,7 @@ public class FollowingResponse extends PagedResponse {
      * Creates a response indicating that the corresponding request was successful.
      *
      * @param followees the followees to be included in the result.
-     * @param hasMorePages an indicator or whether more data is available for the request.
+     * @param hasMorePages an indicator of whether more data is available for the request.
      */
     public FollowingResponse(List<User> followees, boolean hasMorePages) {
         super(true, hasMorePages);

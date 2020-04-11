@@ -146,7 +146,7 @@ public class UserGenerator {
     /**
      * A class used by Gson to map the json data to an instance of this class.
      */
-    class Names {
+    static class Names {
 
         @SuppressWarnings("unused")
         private String [] data;
