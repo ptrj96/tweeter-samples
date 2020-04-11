@@ -32,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         User user = (User) getIntent().getSerializableExtra(CURRENT_USER_KEY);
+        if(user == null) {
+            throw new RuntimeException("User not passed to activity");
+        }
+
         AuthToken authToken = (AuthToken) getIntent().getSerializableExtra(AUTH_TOKEN_KEY);
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), user, authToken);

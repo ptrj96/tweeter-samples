@@ -83,9 +83,15 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
         Toast.makeText(this, "Failed to login. " + loginResponse.getMessage(), Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * A callback indicating that an exception was thrown in an asynchronous method called on the
+     * presenter.
+     *
+     * @param exception the exception.
+     */
     @Override
-    public void handleException(Exception ex) {
-        Log.e(LOG_TAG, ex.getMessage(), ex);
-        Toast.makeText(this, "Failed to login because of exception: " + ex.getMessage(), Toast.LENGTH_LONG).show();
+    public void handleException(Exception exception) {
+        Log.e(LOG_TAG, exception.getMessage(), exception);
+        Toast.makeText(this, "Failed to login because of exception: " + exception.getMessage(), Toast.LENGTH_LONG).show();
     }
 }
