@@ -1,7 +1,6 @@
 package edu.byu.cs.tweeter.model.services;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.IOException;
 
@@ -24,6 +23,7 @@ public class FollowingService {
      */
     public interface Observer {
         void followeesRetrieved(FollowingResponse followingResponse);
+        void handleException(Exception exception);
     }
 
     /**
@@ -51,6 +51,8 @@ public class FollowingService {
     public void getFollowees(FollowingRequest request) {
         AsyncTask<FollowingRequest, Void, FollowingResponse> followingTask = new AsyncTask<FollowingRequest, Void, FollowingResponse>() {
 
+            private Exception exception;
+
             /**
              * The method that is invoked on the background thread to retrieve followees. This method is
              * invoked indirectly by calling {@link #execute(FollowingRequest...)}.
@@ -64,7 +66,11 @@ public class FollowingService {
                 FollowingResponse response = serverFacade.getFollowees(followingRequests[0]);
 
                 if(response.isSuccess()) {
-                    loadImages(response);
+                    try {
+                        loadImages(response);
+                    } catch (IOException ex) {
+                        exception = ex;
+                    }
                 }
 
                 return response;
@@ -75,14 +81,10 @@ public class FollowingService {
              *
              * @param response the response from the followee request.
              */
-            private void loadImages(FollowingResponse response) {
+            private void loadImages(FollowingResponse response) throws IOException {
                 for(User user : response.getFollowees()) {
-                    try {
-                        byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
-                        user.setImageBytes(bytes);
-                    } catch (IOException e) {
-                        Log.e(this.getClass().getName(), e.toString(), e);
-                    }
+                    byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
+                    user.setImageBytes(bytes);
                 }
             }
 
@@ -94,7 +96,11 @@ public class FollowingService {
              */
             @Override
             protected void onPostExecute(FollowingResponse followingResponse) {
-                observer.followeesRetrieved(followingResponse);
+                if(exception != null) {
+                    observer.handleException(exception);
+                } else {
+                    observer.followeesRetrieved(followingResponse);
+                }
             }
         };
 

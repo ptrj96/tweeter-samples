@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import edu.byu.cs.tweeter.view.util.ImageUtils;
  */
 public class FollowingFragment extends Fragment implements FollowingPresenter.View {
 
+    private static final String LOG_TAG = "FollowingFragment";
     private static final String USER_KEY = "UserKey";
     private static final String AUTH_TOKEN_KEY = "AuthTokenKey";
 
@@ -97,6 +99,17 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
     @Override
     public void followeesRetrieved(FollowingResponse followingResponse) {
         followingRecyclerViewAdapter.followeesRetrieved(followingResponse);
+    }
+
+    /**
+     * A callback indicating that an exception was thrown in an asynchronous method called on the
+     * presenter.
+     *
+     * @param exception the exception.
+     */
+    @Override
+    public void handleException(Exception exception) {
+        followingRecyclerViewAdapter.handleException(exception);
     }
 
     /**
@@ -280,6 +293,17 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             isLoading = false;
             removeLoadingFooter();
             followingRecyclerViewAdapter.addItems(followees);
+        }
+
+        /**
+         * Logs the exception, removes the loading footer and notifies the user.
+         *
+         * @param exception the exception
+         */
+        public void handleException(Exception exception) {
+            Log.e(LOG_TAG, exception.getMessage(), exception);
+            removeLoadingFooter();
+            Toast.makeText(getContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
         }
 
         /**

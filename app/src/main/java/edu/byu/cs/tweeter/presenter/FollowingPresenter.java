@@ -17,6 +17,7 @@ public class FollowingPresenter implements FollowingService.Observer {
      */
     public interface View {
         void followeesRetrieved(FollowingResponse followingResponse);
+        void handleException(Exception exception);
     }
 
     /**
@@ -55,5 +56,16 @@ public class FollowingPresenter implements FollowingService.Observer {
     @Override
     public void followeesRetrieved(FollowingResponse followingResponse) {
         view.followeesRetrieved(followingResponse);
+    }
+
+    /**
+     * A callback indicating that an exception occurred in an asynchronous method this class is
+     * observing.
+     *
+     * @param exception the exception.
+     */
+    @Override
+    public void handleException(Exception exception) {
+        view.handleException(exception);
     }
 }

@@ -17,6 +17,7 @@ public class LoginPresenter implements LoginService.Observer {
     public interface View {
         void loginSuccessful(LoginResponse loginResponse);
         void loginUnsuccessful(LoginResponse loginResponse);
+        void handleException(Exception exception);
     }
 
     /**
@@ -25,6 +26,10 @@ public class LoginPresenter implements LoginService.Observer {
      * @param view the view for which this class is the presenter.
      */
     public LoginPresenter(View view) {
+        // An assertion would be better, but Android doesn't support Java assertions
+        if(view == null) {
+            throw new NullPointerException();
+        }
         this.view = view;
     }
 
@@ -58,5 +63,16 @@ public class LoginPresenter implements LoginService.Observer {
     @Override
     public void loginUnsuccessful(LoginResponse loginResponse) {
         view.loginUnsuccessful(loginResponse);
+    }
+
+    /**
+     * A callback indicating that an exception occurred in an asynchronous method this class is
+     * observing.
+     *
+     * @param exception the exception.
+     */
+    @Override
+    public void handleException(Exception exception) {
+        view.handleException(exception);
     }
 }

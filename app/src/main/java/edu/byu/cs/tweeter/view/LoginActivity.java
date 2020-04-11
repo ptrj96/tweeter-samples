@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import edu.byu.cs.tweeter.view.main.MainActivity;
  */
 public class LoginActivity extends AppCompatActivity implements LoginPresenter.View {
 
+    private static final String LOG_TAG = "LoginActivity";
     private Toast loginInToast;
 
     @Override
@@ -74,5 +76,17 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
     @Override
     public void loginUnsuccessful(LoginResponse loginResponse) {
         Toast.makeText(this, "Failed to login. " + loginResponse.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * A callback indicating that an exception was thrown in an asynchronous method called on the
+     * presenter.
+     *
+     * @param exception the exception.
+     */
+    @Override
+    public void handleException(Exception exception) {
+        Log.e(LOG_TAG, exception.getMessage(), exception);
+        Toast.makeText(this, "Failed to login because of exception: " + exception.getMessage(), Toast.LENGTH_LONG).show();
     }
 }

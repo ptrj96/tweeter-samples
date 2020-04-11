@@ -1,7 +1,6 @@
 package edu.byu.cs.tweeter.model.services;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.IOException;
 
@@ -25,6 +24,7 @@ public class LoginService {
     public interface Observer {
         void loginSuccessful(LoginResponse loginResponse);
         void loginUnsuccessful(LoginResponse loginResponse);
+        void handleException(Exception exception);
     }
 
     /**
@@ -45,6 +45,8 @@ public class LoginService {
     public void login(LoginRequest loginRequest) {
         AsyncTask<LoginRequest, Void, LoginResponse> loginTask = new AsyncTask<LoginRequest, Void, LoginResponse>() {
 
+            private Exception exception;
+
             /**
              * The method that is invoked on a background thread to log the user in. This method is
              * invoked indirectly by calling {@link #execute(LoginRequest...)}.
@@ -58,7 +60,11 @@ public class LoginService {
                 LoginResponse loginResponse = serverFacade.login(loginRequests[0]);
 
                 if(loginResponse.isSuccess()) {
-                    loadImage(loginResponse.getUser());
+                    try {
+                        loadImage(loginResponse.getUser());
+                    } catch (IOException ex) {
+                        exception = ex;
+                    }
                 }
 
                 return loginResponse;
@@ -69,13 +75,9 @@ public class LoginService {
              *
              * @param user the user whose profile image is to be loaded.
              */
-            private void loadImage(User user) {
-                try {
-                    byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
-                    user.setImageBytes(bytes);
-                } catch (IOException e) {
-                    Log.e(this.getClass().getName(), e.toString(), e);
-                }
+            private void loadImage(User user) throws IOException {
+                byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
+                user.setImageBytes(bytes);
             }
 
             /**
@@ -86,7 +88,9 @@ public class LoginService {
              */
             @Override
             protected void onPostExecute(LoginResponse loginResponse) {
-                if(loginResponse.isSuccess()) {
+                if(exception != null) {
+                    observer.handleException(exception);
+                } else if(loginResponse.isSuccess()) {
                     observer.loginSuccessful(loginResponse);
                 } else {
                     observer.loginUnsuccessful(loginResponse);
