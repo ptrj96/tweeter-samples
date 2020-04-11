@@ -1,7 +1,5 @@
 package edu.byu.cs.tweeter.model.net;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -79,7 +77,7 @@ public class FollowGenerator {
      * @return the generated {@link Follow} objects.
      */
     @SuppressWarnings("WeakerAccess")
-    public List<Follow> generateFollowsForUsers(@NotNull List<User> users,
+    public List<Follow> generateFollowsForUsers(List<User> users,
                                                 int minFollowersPerUser,
                                                 int maxFollowersPerUser,
                                                 Sort sortOrder) {
@@ -163,7 +161,7 @@ public class FollowGenerator {
         return follows;
     }
 
-    private void generateFollowersForUser(int numbFollowersToGenerate, User user, @NotNull List<User> users, List<Follow> follows) {
+    private void generateFollowersForUser(int numbFollowersToGenerate, User user, List<User> users, List<Follow> follows) {
 
         Random random = new Random();
         Set<User> selectedFollowers = new HashSet<>();
