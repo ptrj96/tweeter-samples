@@ -4,8 +4,8 @@ import android.os.AsyncTask;
 
 import java.io.IOException;
 
-import edu.byu.cs.tweeter.net.request.FollowingRequest;
-import edu.byu.cs.tweeter.net.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.net.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.net.response.FollowingResponse;
 import edu.byu.cs.tweeter.presenter.FollowingPresenter;
 
 /**

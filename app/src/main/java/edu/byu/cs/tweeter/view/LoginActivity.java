@@ -10,8 +10,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import edu.byu.cs.tweeter.R;
-import edu.byu.cs.tweeter.net.request.LoginRequest;
-import edu.byu.cs.tweeter.net.response.LoginResponse;
+import edu.byu.cs.tweeter.model.net.request.LoginRequest;
+import edu.byu.cs.tweeter.model.net.response.LoginResponse;
 import edu.byu.cs.tweeter.presenter.LoginPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.LoginTask;
 import edu.byu.cs.tweeter.view.main.MainActivity;

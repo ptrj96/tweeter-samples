@@ -1,11 +1,11 @@
-package edu.byu.cs.tweeter.model.services;
+package edu.byu.cs.tweeter.model.service;
 
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.net.ServerFacade;
-import edu.byu.cs.tweeter.net.request.FollowingRequest;
-import edu.byu.cs.tweeter.net.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.net.ServerFacade;
+import edu.byu.cs.tweeter.model.net.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.net.response.FollowingResponse;
 import edu.byu.cs.tweeter.util.ByteArrayUtils;
 
 /**

@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.net;
+package edu.byu.cs.tweeter.model.net;
 
 import com.google.gson.Gson;
 

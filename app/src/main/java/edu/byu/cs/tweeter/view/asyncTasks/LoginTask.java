@@ -6,9 +6,8 @@ import android.util.Log;
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.model.services.LoginService;
-import edu.byu.cs.tweeter.net.request.LoginRequest;
-import edu.byu.cs.tweeter.net.response.LoginResponse;
+import edu.byu.cs.tweeter.model.net.request.LoginRequest;
+import edu.byu.cs.tweeter.model.net.response.LoginResponse;
 import edu.byu.cs.tweeter.presenter.LoginPresenter;
 import edu.byu.cs.tweeter.util.ByteArrayUtils;
 
@@ -52,11 +51,10 @@ public class LoginTask extends AsyncTask<LoginRequest, Void, LoginResponse> {
      */
     @Override
     protected LoginResponse doInBackground(LoginRequest... loginRequests) {
-        LoginService loginService = new LoginService();
         LoginResponse loginResponse = null;
 
         try {
-            loginResponse = loginService.login(loginRequests[0]);
+            loginResponse = presenter.login(loginRequests[0]);
 
             if(loginResponse.isSuccess()) {
                 loadImage(loginResponse.getUser());

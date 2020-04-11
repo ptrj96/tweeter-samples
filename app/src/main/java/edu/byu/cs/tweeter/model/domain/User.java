@@ -1,7 +1,5 @@
 package edu.byu.cs.tweeter.model.domain;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -16,11 +14,11 @@ public class User implements Comparable<User>, Serializable {
     private final String imageUrl;
     private byte [] imageBytes;
 
-    public User(@NotNull String firstName, @NotNull String lastName, String imageURL) {
+    public User(String firstName, String lastName, String imageURL) {
         this(firstName, lastName, String.format("@%s%s", firstName, lastName), imageURL);
     }
 
-    public User(@NotNull String firstName, @NotNull String lastName, @NotNull String alias, String imageURL) {
+    public User(String firstName, String lastName, String alias, String imageURL) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.alias = alias;
@@ -68,7 +66,6 @@ public class User implements Comparable<User>, Serializable {
         return Objects.hash(alias);
     }
 
-    @NotNull
     @Override
     public String toString() {
         return "User{" +

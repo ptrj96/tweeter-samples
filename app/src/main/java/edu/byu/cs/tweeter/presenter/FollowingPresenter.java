@@ -2,9 +2,9 @@ package edu.byu.cs.tweeter.presenter;
 
 import java.io.IOException;
 
-import edu.byu.cs.tweeter.model.services.FollowingService;
-import edu.byu.cs.tweeter.net.request.FollowingRequest;
-import edu.byu.cs.tweeter.net.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.service.FollowingService;
+import edu.byu.cs.tweeter.model.net.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.net.response.FollowingResponse;
 
 /**
  * The presenter for the "following" functionality of the application.
