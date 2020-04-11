@@ -10,8 +10,9 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import edu.byu.cs.tweeter.R;
-import edu.byu.cs.tweeter.model.net.request.LoginRequest;
-import edu.byu.cs.tweeter.model.net.response.LoginResponse;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
+import edu.byu.cs.tweeter.model.service.request.LoginRequest;
+import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 import edu.byu.cs.tweeter.client.presenter.LoginPresenter;
 import edu.byu.cs.tweeter.client.view.asyncTasks.LoginTask;
 import edu.byu.cs.tweeter.client.view.main.MainActivity;
@@ -92,6 +93,19 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
     @Override
     public void handleException(Exception exception) {
         Log.e(LOG_TAG, exception.getMessage(), exception);
+
+        if(exception instanceof TweeterRemoteException) {
+            TweeterRemoteException remoteException = (TweeterRemoteException) exception;
+            Log.e(LOG_TAG, "Remote Exception Type: " + remoteException.getRemoteExceptionType());
+
+            Log.e(LOG_TAG, "Remote Stack Trace:");
+            if(remoteException.getRemoteStackTrace() != null) {
+                for(String stackTraceLine : remoteException.getRemoteStackTrace()) {
+                    Log.e(LOG_TAG, "\t\t" + stackTraceLine);
+                }
+            }
+        }
+
         Toast.makeText(this, "Failed to login because of exception: " + exception.getMessage(), Toast.LENGTH_LONG).show();
     }
 }

@@ -1,12 +1,17 @@
-package edu.byu.cs.tweeter.model.net.request;
+package edu.byu.cs.tweeter.model.service.request;
 
 /**
  * Contains all the information needed to make a login request.
  */
 public class LoginRequest {
 
-    private final String username;
-    private final String password;
+    private String username;
+    private String password;
+
+    /**
+     * Allows construction of the object from Json. Private so it won't be called in normal code.
+     */
+    private LoginRequest() {}
 
     /**
      * Creates an instance.
@@ -29,11 +34,28 @@ public class LoginRequest {
     }
 
     /**
+     * Sets the username.
+     *
+     * @param username the username.
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    /**
      * Returns the password of the user to be logged in by this request.
      *
      * @return the password.
      */
     public String getPassword() {
         return password;
+    }
+
+    /**
+     * Sets the password.
+     *
+     * @param password the password.
+     */
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

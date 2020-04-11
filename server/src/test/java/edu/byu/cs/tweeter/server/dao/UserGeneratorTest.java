@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.client.model.net;
+package edu.byu.cs.tweeter.server.dao;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

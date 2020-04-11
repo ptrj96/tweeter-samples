@@ -4,10 +4,10 @@ import java.util.List;
 
 public class TweeterRemoteException extends Exception {
 
-    protected final String remoteExceptionType;
-    protected final List<String> remoteStakeTrace;
+    private final String remoteExceptionType;
+    private final List<String> remoteStakeTrace;
 
-    public TweeterRemoteException(String message, String remoteExceptionType, List<String> remoteStakeTrace) {
+    protected TweeterRemoteException(String message, String remoteExceptionType, List<String> remoteStakeTrace) {
         super(message);
         this.remoteExceptionType = remoteExceptionType;
         this.remoteStakeTrace = remoteStakeTrace;

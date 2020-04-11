@@ -4,8 +4,9 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.client.model.net.ServerFacade;
-import edu.byu.cs.tweeter.model.net.request.FollowingRequest;
-import edu.byu.cs.tweeter.model.net.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
+import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.client.util.ByteArrayUtils;
 import edu.byu.cs.tweeter.model.service.FollowingService;
 
@@ -13,6 +14,8 @@ import edu.byu.cs.tweeter.model.service.FollowingService;
  * Contains the business logic for getting the users a user is following.
  */
 public class FollowingServiceProxy implements FollowingService {
+
+    private static final String URL_PATH = "/getfollowing";
 
     /**
      * Returns the users that the user specified in the request is following. Uses information in
@@ -23,9 +26,10 @@ public class FollowingServiceProxy implements FollowingService {
      * @param request contains the data required to fulfill the request.
      * @return the followees.
      */
-    public FollowingResponse getFollowees(FollowingRequest request) throws IOException {
+    @Override
+    public FollowingResponse getFollowees(FollowingRequest request) throws IOException, TweeterRemoteException {
         ServerFacade serverFacade = new ServerFacade();
-        FollowingResponse response = serverFacade.getFollowees(request);
+        FollowingResponse response = serverFacade.getFollowees(request, URL_PATH);
 
         if(response.isSuccess()) {
             loadImages(response);

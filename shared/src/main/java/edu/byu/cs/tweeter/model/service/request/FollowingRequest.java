@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.model.net.request;
+package edu.byu.cs.tweeter.model.service.request;
 
 import edu.byu.cs.tweeter.model.domain.User;
 
@@ -8,9 +8,14 @@ import edu.byu.cs.tweeter.model.domain.User;
  */
 public class FollowingRequest {
 
-    private final User follower;
-    private final int limit;
-    private final User lastFollowee;
+    private User follower;
+    private int limit;
+    private User lastFollowee;
+
+    /**
+     * Allows construction of the object from Json. Private so it won't be called in normal code.
+     */
+    private FollowingRequest() {}
 
     /**
      * Creates an instance.
@@ -37,12 +42,30 @@ public class FollowingRequest {
     }
 
     /**
+     * Sets the follower.
+     *
+     * @param follower the follower.
+     */
+    public void setFollower(User follower) {
+        this.follower = follower;
+    }
+
+    /**
      * Returns the number representing the maximum number of followees to be returned by this request.
      *
      * @return the limit.
      */
     public int getLimit() {
         return limit;
+    }
+
+    /**
+     * Sets the limit.
+     *
+     * @param limit the limit.
+     */
+    public void setLimit(int limit) {
+        this.limit = limit;
     }
 
     /**
@@ -53,5 +76,14 @@ public class FollowingRequest {
      */
     public User getLastFollowee() {
         return lastFollowee;
+    }
+
+    /**
+     * Sets the last followee.
+     *
+     * @param lastFollowee the last followee.
+     */
+    public void setLastFollowee(User lastFollowee) {
+        this.lastFollowee = lastFollowee;
     }
 }

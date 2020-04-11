@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.client.model.service.FollowingServiceProxy;
 import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
-import edu.byu.cs.tweeter.model.net.request.FollowingRequest;
-import edu.byu.cs.tweeter.model.net.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.model.service.FollowingService;
 
 /**

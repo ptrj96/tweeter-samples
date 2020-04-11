@@ -23,8 +23,9 @@ import java.util.List;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.model.net.request.FollowingRequest;
-import edu.byu.cs.tweeter.model.net.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
+import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.client.presenter.FollowingPresenter;
 import edu.byu.cs.tweeter.client.view.asyncTasks.GetFollowingTask;
 import edu.byu.cs.tweeter.client.view.util.ImageUtils;
@@ -140,7 +141,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
 
         private final List<User> users = new ArrayList<>();
 
-        private edu.byu.cs.tweeter.model.domain.User lastFollowee;
+        private User lastFollowee;
 
         private boolean hasMorePages;
         private boolean isLoading = false;
@@ -271,7 +272,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             List<User> followees = followingResponse.getFollowees();
 
             lastFollowee = (followees.size() > 0) ? followees.get(followees.size() -1) : null;
-            hasMorePages = followingResponse.hasMorePages();
+            hasMorePages = followingResponse.getHasMorePages();
 
             isLoading = false;
             removeLoadingFooter();
@@ -286,6 +287,19 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         @Override
         public void handleException(Exception exception) {
             Log.e(LOG_TAG, exception.getMessage(), exception);
+
+            if(exception instanceof TweeterRemoteException) {
+                TweeterRemoteException remoteException = (TweeterRemoteException) exception;
+                Log.e(LOG_TAG, "Remote Exception Type: " + remoteException.getRemoteExceptionType());
+
+                Log.e(LOG_TAG, "Remote Stack Trace:");
+                if(remoteException.getRemoteStackTrace() != null) {
+                    for(String stackTraceLine : remoteException.getRemoteStackTrace()) {
+                        Log.e(LOG_TAG, "\t\t" + stackTraceLine);
+                    }
+                }
+            }
+
             removeLoadingFooter();
             Toast.makeText(getContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
         }

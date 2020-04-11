@@ -4,8 +4,9 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.client.model.net.ServerFacade;
-import edu.byu.cs.tweeter.model.net.request.LoginRequest;
-import edu.byu.cs.tweeter.model.net.response.LoginResponse;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
+import edu.byu.cs.tweeter.model.service.request.LoginRequest;
+import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 import edu.byu.cs.tweeter.client.util.ByteArrayUtils;
 import edu.byu.cs.tweeter.model.service.LoginService;
 
@@ -14,9 +15,11 @@ import edu.byu.cs.tweeter.model.service.LoginService;
  */
 public class LoginServiceProxy implements LoginService {
 
-    public LoginResponse login(LoginRequest request) throws IOException {
+    private static final String URL_PATH = "/login";
+
+    public LoginResponse login(LoginRequest request) throws IOException, TweeterRemoteException {
         ServerFacade serverFacade = new ServerFacade();
-        LoginResponse loginResponse = serverFacade.login(request);
+        LoginResponse loginResponse = serverFacade.login(request, URL_PATH);
 
         if(loginResponse.isSuccess()) {
             loadImage(loginResponse.getUser());
