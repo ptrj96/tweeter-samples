@@ -23,8 +23,7 @@ public class FollowingService {
      * @return the followees.
      */
     public FollowingResponse getFollowees(FollowingRequest request) throws IOException {
-        ServerFacade serverFacade = new ServerFacade();
-        FollowingResponse response = serverFacade.getFollowees(request);
+        FollowingResponse response = getServerFacade().getFollowees(request);
 
         if(response.isSuccess()) {
             loadImages(response);
@@ -43,5 +42,16 @@ public class FollowingService {
             byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
             user.setImageBytes(bytes);
         }
+    }
+
+    /**
+     * Returns an instance of {@link ServerFacade}. Allows mocking of the ServerFacade class for
+     * testing purposes. All usages of ServerFacade should get their ServerFacade instance from this
+     * method to allow for proper mocking.
+     *
+     * @return the instance.
+     */
+    ServerFacade getServerFacade() {
+        return new ServerFacade();
     }
 }
