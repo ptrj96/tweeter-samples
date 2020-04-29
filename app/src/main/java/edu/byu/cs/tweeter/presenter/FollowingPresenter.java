@@ -9,7 +9,6 @@ import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
  */
 public class FollowingPresenter implements FollowingService.Observer {
 
-    private final FollowingService followingService;
     private final View view;
 
     /**
@@ -32,7 +31,6 @@ public class FollowingPresenter implements FollowingService.Observer {
         }
 
         this.view = view;
-        this.followingService = new FollowingService(this);
     }
 
     /**
@@ -44,7 +42,18 @@ public class FollowingPresenter implements FollowingService.Observer {
      * @param request contains the data required to fulfill the request.
      */
     public void getFollowing(FollowingRequest request) {
-        followingService.getFollowees(request);
+        getFollowingService(this).getFollowees(request);
+    }
+
+    /**
+     * Returns an instance of {@link FollowingService}. Allows mocking of the FollowingService class
+     * for testing purposes. All usages of FollowingService should get their FollowingService
+     * instance from this method to allow for mocking of the instance.
+     *
+     * @return the instance.
+     */
+    FollowingService getFollowingService(FollowingService.Observer observer) {
+        return new FollowingService(observer);
     }
 
     /**
@@ -60,7 +69,7 @@ public class FollowingPresenter implements FollowingService.Observer {
 
     /**
      * A callback indicating that an exception occurred in an asynchronous method this class is
-     * observing.
+     * observing. Notifies the view of the exception.
      *
      * @param exception the exception.
      */

@@ -49,61 +49,92 @@ public class FollowingService {
      * @param request contains the data required to fulfill the request.
      */
     public void getFollowees(FollowingRequest request) {
-        AsyncTask<FollowingRequest, Void, FollowingResponse> followingTask = new AsyncTask<FollowingRequest, Void, FollowingResponse>() {
-
-            private Exception exception;
-
-            /**
-             * The method that is invoked on the background thread to retrieve followees. This method is
-             * invoked indirectly by calling {@link #execute(FollowingRequest...)}.
-             *
-             * @param followingRequests the request object (there will only be one).
-             * @return the response.
-             */
-            @Override
-            protected FollowingResponse doInBackground(FollowingRequest... followingRequests) {
-                ServerFacade serverFacade = new ServerFacade();
-                FollowingResponse response = serverFacade.getFollowees(followingRequests[0]);
-
-                if(response.isSuccess()) {
-                    try {
-                        loadImages(response);
-                    } catch (IOException ex) {
-                        exception = ex;
-                    }
-                }
-
-                return response;
-            }
-
-            /**
-             * Loads the profile image for each followee included in the response.
-             *
-             * @param response the response from the followee request.
-             */
-            private void loadImages(FollowingResponse response) throws IOException {
-                for(User user : response.getFollowees()) {
-                    byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
-                    user.setImageBytes(bytes);
-                }
-            }
-
-            /**
-             * Notifies the observer (on the thread of the invoker of the
-             * {@link #execute(FollowingRequest...)} method) when the task completes.
-             *
-             * @param followingResponse the response that was received by the task.
-             */
-            @Override
-            protected void onPostExecute(FollowingResponse followingResponse) {
-                if(exception != null) {
-                    observer.handleException(exception);
-                } else {
-                    observer.followeesRetrieved(followingResponse);
-                }
-            }
-        };
-
+        AsyncTask<FollowingRequest, Void, FollowingResponse> followingTask = getRetrieveFollowingAsyncTask();
         followingTask.execute(request);
+    }
+
+    /**
+     * Returns an instance of {@link ServerFacade}. Allows mocking of the ServerFacade class for
+     * testing purposes. All usages of ServerFacade should get their instance from this method to
+     * allow for proper mocking.
+     *
+     * @return the instance.
+     */
+    ServerFacade getServerFacade() {
+        return new ServerFacade();
+    }
+
+    /**
+     * Returns an instance of {@link RetrieveFollowingAsyncTask}. Allows mocking of the
+     * RetrieveFollowingAsyncTask class for testing purposes. All usages of
+     * RetrieveFollowingAsyncTask should get their instance from this method to allow for proper
+     * mocking.
+     *
+     * @return the instance.
+     */
+    RetrieveFollowingAsyncTask getRetrieveFollowingAsyncTask() {
+        return new RetrieveFollowingAsyncTask(observer);
+    }
+
+    /**
+     * The AsyncTask that makes the request to retrieve followees on a background thread.
+     */
+    class RetrieveFollowingAsyncTask extends AsyncTask<FollowingRequest, Void, FollowingResponse> {
+
+        private final Observer observer;
+        private Exception exception;
+
+        RetrieveFollowingAsyncTask(Observer observer) {
+            this.observer = observer;
+        }
+
+        /**
+         * The method that is invoked on the background thread to retrieve followees. This method is
+         * invoked indirectly by calling {@link #execute(FollowingRequest...)}.
+         *
+         * @param followingRequests the request object (there will only be one).
+         * @return the response.
+         */
+        @Override
+        protected FollowingResponse doInBackground(FollowingRequest... followingRequests) {
+            FollowingResponse response = getServerFacade().getFollowees(followingRequests[0]);
+
+            if(response.isSuccess()) {
+                try {
+                    loadImages(response);
+                } catch (IOException ex) {
+                    exception = ex;
+                }
+            }
+
+            return response;
+        }
+
+        /**
+         * Loads the profile image for each followee included in the response.
+         *
+         * @param response the response from the followee request.
+         */
+        void loadImages(FollowingResponse response) throws IOException {
+            for(User user : response.getFollowees()) {
+                byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
+                user.setImageBytes(bytes);
+            }
+        }
+
+        /**
+         * Notifies the observer (on the thread of the invoker of the
+         * {@link #execute(FollowingRequest...)} method) when the task completes.
+         *
+         * @param followingResponse the response that was received by the task.
+         */
+        @Override
+        protected void onPostExecute(FollowingResponse followingResponse) {
+            if(exception != null) {
+                observer.handleException(exception);
+            } else {
+                observer.followeesRetrieved(followingResponse);
+            }
+        }
     }
 }
