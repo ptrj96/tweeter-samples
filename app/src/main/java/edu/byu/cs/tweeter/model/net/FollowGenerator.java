@@ -118,6 +118,8 @@ public class FollowGenerator {
         // Sort by the specified sort order
         switch (sortOrder) {
             case FOLLOWEE_FOLLOWER:
+                // We should use a Java 8 lambda function for the Comparator, but these will be
+                // unfamiliar to many students who use this code.
                 Collections.sort(follows, new Comparator<Follow>() {
                     @Override
                     public int compare(Follow follow1, Follow follow2) {

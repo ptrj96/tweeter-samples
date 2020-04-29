@@ -34,9 +34,9 @@ import edu.byu.cs.tweeter.view.util.ImageUtils;
  */
 public class FollowingFragment extends Fragment implements FollowingPresenter.View {
 
+    private static final String LOG_TAG = "FollowingFragment";
     private static final String USER_KEY = "UserKey";
     private static final String AUTH_TOKEN_KEY = "AuthTokenKey";
-    private static final String LOG_TAG = "FollowingFragment";
 
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
