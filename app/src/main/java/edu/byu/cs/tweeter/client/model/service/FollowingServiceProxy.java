@@ -15,7 +15,7 @@ import edu.byu.cs.tweeter.model.service.FollowingService;
  */
 public class FollowingServiceProxy implements FollowingService {
 
-    private static final String URL_PATH = "/getfollowing";
+    static final String URL_PATH = "/getfollowing";
 
     /**
      * Returns the users that the user specified in the request is following. Uses information in
@@ -28,8 +28,7 @@ public class FollowingServiceProxy implements FollowingService {
      */
     @Override
     public FollowingResponse getFollowees(FollowingRequest request) throws IOException, TweeterRemoteException {
-        ServerFacade serverFacade = new ServerFacade();
-        FollowingResponse response = serverFacade.getFollowees(request, URL_PATH);
+        FollowingResponse response = getServerFacade().getFollowees(request, URL_PATH);
 
         if(response.isSuccess()) {
             loadImages(response);
@@ -48,5 +47,16 @@ public class FollowingServiceProxy implements FollowingService {
             byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
             user.setImageBytes(bytes);
         }
+    }
+
+    /**
+     * Returns an instance of {@link ServerFacade}. Allows mocking of the ServerFacade class for
+     * testing purposes. All usages of ServerFacade should get their ServerFacade instance from this
+     * method to allow for proper mocking.
+     *
+     * @return the instance.
+     */
+    ServerFacade getServerFacade() {
+        return new ServerFacade();
     }
 }

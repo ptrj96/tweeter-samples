@@ -19,7 +19,7 @@ public class FollowingPresenter {
      * The interface by which this presenter communicates with it's view.
      */
     public interface View {
-        // If needed, specify methods here that will be called on the view in response to edu.byu.cs.shared.model updates
+        // If needed, specify methods here that will be called on the view in response to edu.byu.cs.shared.edu.byu.cs.tweeter.client.model updates
     }
 
     /**
@@ -40,7 +40,18 @@ public class FollowingPresenter {
      * @return the followees.
      */
     public FollowingResponse getFollowing(FollowingRequest request) throws IOException, TweeterRemoteException {
-        FollowingService followingService = new FollowingServiceProxy();
+        FollowingService followingService = getFollowingService();
         return followingService.getFollowees(request);
+    }
+
+    /**
+     * Returns an instance of {@link FollowingService}. Allows mocking of the FollowingService class
+     * for testing purposes. All usages of FollowingService should get their FollowingService
+     * instance from this method to allow for mocking of the instance.
+     *
+     * @return the instance.
+     */
+    FollowingService getFollowingService() {
+        return new FollowingServiceProxy();
     }
 }

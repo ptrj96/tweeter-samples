@@ -18,7 +18,7 @@ public class LoginServiceProxy implements LoginService {
     private static final String URL_PATH = "/login";
 
     public LoginResponse login(LoginRequest request) throws IOException, TweeterRemoteException {
-        ServerFacade serverFacade = new ServerFacade();
+        ServerFacade serverFacade = getServerFacade();
         LoginResponse loginResponse = serverFacade.login(request, URL_PATH);
 
         if(loginResponse.isSuccess()) {
@@ -36,5 +36,16 @@ public class LoginServiceProxy implements LoginService {
     private void loadImage(User user) throws IOException {
         byte [] bytes = ByteArrayUtils.bytesFromUrl(user.getImageUrl());
         user.setImageBytes(bytes);
+    }
+
+    /**
+     * Returns an instance of {@link ServerFacade}. Allows mocking of the ServerFacade class for
+     * testing purposes. All usages of ServerFacade should get their ServerFacade instance from this
+     * method to allow for proper mocking.
+     *
+     * @return the instance.
+     */
+    ServerFacade getServerFacade() {
+        return new ServerFacade();
     }
 }

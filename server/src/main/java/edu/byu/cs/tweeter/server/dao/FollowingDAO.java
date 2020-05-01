@@ -58,31 +58,6 @@ public class FollowingDAO {
     }
 
     /**
-     * Generates the followee data.
-     */
-    private Map<User, List<User>> initializeFollowees() {
-
-        Map<User, List<User>> followeesByFollower = new HashMap<>();
-
-        List<Follow> follows = getFollowGenerator().generateUsersAndFollows(100,
-                0, 50, FollowGenerator.Sort.FOLLOWER_FOLLOWEE);
-
-        // Populate a map of followees, keyed by follower so we can easily handle followee requests
-        for(Follow follow : follows) {
-            List<User> followees = followeesByFollower.get(follow.getFollower());
-
-            if(followees == null) {
-                followees = new ArrayList<>();
-                followeesByFollower.put(follow.getFollower(), followees);
-            }
-
-            followees.add(follow.getFollowee());
-        }
-
-        return followeesByFollower;
-    }
-
-    /**
      * Determines the index for the first followee in the specified 'allFollowees' list that should
      * be returned in the current request. This will be the index of the next followee after the
      * specified 'lastFollowee'.
@@ -109,6 +84,31 @@ public class FollowingDAO {
         }
 
         return followeesIndex;
+    }
+
+    /**
+     * Generates the followee data.
+     */
+    private Map<User, List<User>> initializeFollowees() {
+
+        Map<User, List<User>> followeesByFollower = new HashMap<>();
+
+        List<Follow> follows = getFollowGenerator().generateUsersAndFollows(100,
+                0, 50, FollowGenerator.Sort.FOLLOWER_FOLLOWEE);
+
+        // Populate a map of followees, keyed by follower so we can easily handle followee requests
+        for(Follow follow : follows) {
+            List<User> followees = followeesByFollower.get(follow.getFollower());
+
+            if(followees == null) {
+                followees = new ArrayList<>();
+                followeesByFollower.put(follow.getFollower(), followees);
+            }
+
+            followees.add(follow.getFollowee());
+        }
+
+        return followeesByFollower;
     }
 
     /**
