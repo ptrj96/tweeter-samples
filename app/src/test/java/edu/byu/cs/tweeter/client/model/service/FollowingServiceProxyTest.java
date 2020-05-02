@@ -8,12 +8,13 @@ import org.mockito.Mockito;
 import java.io.IOException;
 import java.util.Arrays;
 
-import edu.byu.cs.tweeter.shared.model.domain.User;
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.client.model.net.ServerFacade;
-import edu.byu.cs.tweeter.shared.model.service.request.FollowingRequest;
-import edu.byu.cs.tweeter.shared.model.service.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.net.TweeterRemoteException;
+import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 
-public class FollowingServiceTest {
+public class FollowingServiceProxyTest {
 
     private FollowingRequest validRequest;
     private FollowingRequest invalidRequest;
@@ -30,7 +31,7 @@ public class FollowingServiceTest {
      * requests.
      */
     @BeforeEach
-    public void setup() {
+    public void setup() throws IOException, TweeterRemoteException {
         User currentUser = new User("FirstName", "LastName", null);
 
         User resultUser1 = new User("FirstName1", "LastName1",
@@ -47,10 +48,10 @@ public class FollowingServiceTest {
         // Setup a mock ServerFacade that will return known responses
         successResponse = new FollowingResponse(Arrays.asList(resultUser1, resultUser2, resultUser3), false);
         ServerFacade mockServerFacade = Mockito.mock(ServerFacade.class);
-        Mockito.when(mockServerFacade.getFollowees(validRequest)).thenReturn(successResponse);
+        Mockito.when(mockServerFacade.getFollowees(validRequest, FollowingServiceProxy.URL_PATH)).thenReturn(successResponse);
 
         failureResponse = new FollowingResponse("An exception occured");
-        Mockito.when(mockServerFacade.getFollowees(invalidRequest)).thenReturn(failureResponse);
+        Mockito.when(mockServerFacade.getFollowees(invalidRequest, FollowingServiceProxy.URL_PATH)).thenReturn(failureResponse);
 
         // Setup a mock observer for the FollowingService and GetFolloweesAsyncTask
         mockObserver = Mockito.mock(FollowingServiceProxy.Observer.class);

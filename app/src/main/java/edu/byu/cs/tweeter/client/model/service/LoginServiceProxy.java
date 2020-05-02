@@ -4,16 +4,21 @@ import android.os.AsyncTask;
 
 import java.io.IOException;
 
-import edu.byu.cs.tweeter.shared.model.domain.User;
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.client.model.net.ServerFacade;
-import edu.byu.cs.tweeter.shared.model.service.request.LoginRequest;
-import edu.byu.cs.tweeter.shared.model.service.response.LoginResponse;
+import edu.byu.cs.tweeter.model.service.request.LoginRequest;
+import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 import edu.byu.cs.tweeter.client.util.ByteArrayUtils;
+import edu.byu.cs.tweeter.model.service.LoginService;
 
 /**
- * Contains the business logic to support the login operation.
+ * Contains the business logic to support the login operation. Not a pure proxy because
+ * it doesn't implement the {@link LoginService} interface. It can't because this class is
+ * called asynchronously, but we need the implementing class on the server to be synchronous.
  */
 public class LoginServiceProxy {
+
+    private static final String URL_PATH = "/login";
 
     private final Observer observer;
 
@@ -86,14 +91,16 @@ public class LoginServiceProxy {
          */
         @Override
         protected LoginResponse doInBackground(LoginRequest... loginRequests) {
-            LoginResponse loginResponse = getServerFacade().login(loginRequests[0]);
+            LoginResponse loginResponse = null;
 
-            if(loginResponse.isSuccess()) {
-                try {
-                    loadImage(loginResponse.getUser());
-                } catch (IOException ex) {
-                    exception = ex;
+            try {
+                loginResponse = getServerFacade().login(loginRequests[0], URL_PATH);
+
+                if(loginResponse.isSuccess()) {
+                        loadImage(loginResponse.getUser());
                 }
+            } catch (Exception ex) {
+                exception = ex;
             }
 
             return loginResponse;

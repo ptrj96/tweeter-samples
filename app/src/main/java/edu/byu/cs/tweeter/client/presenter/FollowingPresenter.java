@@ -1,8 +1,8 @@
 package edu.byu.cs.tweeter.client.presenter;
 
 import edu.byu.cs.tweeter.client.model.service.FollowingServiceProxy;
-import edu.byu.cs.tweeter.shared.model.service.request.FollowingRequest;
-import edu.byu.cs.tweeter.shared.model.service.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 
 /**
  * The presenter for the "following" functionality of the application.

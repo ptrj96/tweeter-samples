@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.shared.model.domain;
+package edu.byu.cs.tweeter.model.domain;
 
 import java.io.Serializable;
 

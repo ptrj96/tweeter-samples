@@ -9,10 +9,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.byu.cs.tweeter.shared.model.domain.User;
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.client.model.service.FollowingServiceProxy;
-import edu.byu.cs.tweeter.shared.model.service.request.FollowingRequest;
-import edu.byu.cs.tweeter.shared.model.service.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 
 public class FollowingPresenterTest {
 

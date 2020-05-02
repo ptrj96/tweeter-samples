@@ -4,16 +4,21 @@ import android.os.AsyncTask;
 
 import java.io.IOException;
 
-import edu.byu.cs.tweeter.shared.model.domain.User;
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.client.model.net.ServerFacade;
-import edu.byu.cs.tweeter.shared.model.service.request.FollowingRequest;
-import edu.byu.cs.tweeter.shared.model.service.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.client.util.ByteArrayUtils;
+import edu.byu.cs.tweeter.model.service.FollowingService;
 
 /**
- * Contains the business logic for getting the users a user is following.
+ * Contains the business logic for getting the users a user is following. Not a pure proxy because
+ * it doesn't implement the {@link FollowingService} interface. It can't because this class is
+ * called asynchronously, but we need the implementing class on the server to be synchronous.
  */
 public class FollowingServiceProxy {
+
+    static final String URL_PATH = "/getfollowing";
 
     private final Observer observer;
 
@@ -97,14 +102,16 @@ public class FollowingServiceProxy {
          */
         @Override
         protected FollowingResponse doInBackground(FollowingRequest... followingRequests) {
-            FollowingResponse response = getServerFacade().getFollowees(followingRequests[0]);
+            FollowingResponse response = null;
 
-            if(response.isSuccess()) {
-                try {
-                    loadImages(response);
-                } catch (IOException ex) {
-                    exception = ex;
+            try {
+                response = getServerFacade().getFollowees(followingRequests[0], URL_PATH);
+
+                if(response.isSuccess()) {
+                        loadImages(response);
                 }
+            } catch (Exception ex) {
+                exception = ex;
             }
 
             return response;

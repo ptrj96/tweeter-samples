@@ -9,8 +9,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import edu.byu.cs.tweeter.R;
-import edu.byu.cs.tweeter.shared.model.domain.AuthToken;
-import edu.byu.cs.tweeter.shared.model.domain.User;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.client.view.main.following.FollowingFragment;
 
 /**

@@ -1,8 +1,8 @@
 package edu.byu.cs.tweeter.client.presenter;
 
 import edu.byu.cs.tweeter.client.model.service.LoginServiceProxy;
-import edu.byu.cs.tweeter.shared.model.service.request.LoginRequest;
-import edu.byu.cs.tweeter.shared.model.service.response.LoginResponse;
+import edu.byu.cs.tweeter.model.service.request.LoginRequest;
+import edu.byu.cs.tweeter.model.service.response.LoginResponse;
 
 /**
  * The presenter for the login functionality of the application.
