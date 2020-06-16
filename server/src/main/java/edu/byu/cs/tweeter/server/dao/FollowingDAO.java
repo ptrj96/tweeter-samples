@@ -18,6 +18,28 @@ public class FollowingDAO {
     private static Map<User, List<User>> followeesByFollower;
 
     /**
+     * Gets the count of users from the database that the user specified is following. The
+     * current implementation uses generated data and doesn't actually access a database.
+     *
+     * @param follower the User whose count of how many following is desired.
+     * @return said count.
+     */
+    public Integer getFolloweeCount(User follower) {
+        // TODO: uses the dummy data.  Replace with a real implementation.
+
+        assert follower != null;
+
+        if (followeesByFollower == null) {
+            followeesByFollower = initializeFollowees();
+        }
+
+        if (followeesByFollower.containsKey(follower)) {
+            return followeesByFollower.get(follower).size();
+        }
+        return 0;
+    }
+
+    /**
      * Gets the users from the database that the user specified in the request is following. Uses
      * information in the request object to limit the number of followees returned and to return the
      * next set of followees after any that were returned in a previous request. The current
