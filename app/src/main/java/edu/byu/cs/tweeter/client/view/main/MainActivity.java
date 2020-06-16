@@ -64,5 +64,12 @@ public class MainActivity extends AppCompatActivity {
 
         ImageView userImageView = findViewById(R.id.userImage);
         userImageView.setImageDrawable(ImageUtils.drawableFromByteArray(user.getImageBytes()));
+
+        TextView followeeCount = findViewById(R.id.followeeCount);
+        followeeCount.setText("Following: " + "-42");
+
+        TextView followerCount = findViewById(R.id.followerCount);
+        followerCount.setText("Followers: " + "-42");
+
     }
 }
