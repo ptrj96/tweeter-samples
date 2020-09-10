@@ -70,6 +70,5 @@ public class MainActivity extends AppCompatActivity {
 
         TextView followerCount = findViewById(R.id.followerCount);
         followerCount.setText("Followers: " + "-42");
-
     }
 }

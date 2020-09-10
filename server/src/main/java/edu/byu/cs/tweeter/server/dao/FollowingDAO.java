@@ -35,8 +35,9 @@ public class FollowingDAO {
 
         if (followeesByFollower.containsKey(follower)) {
             return followeesByFollower.get(follower).size();
+        } else {
+            return 0;
         }
-        return 0;
     }
 
     /**
